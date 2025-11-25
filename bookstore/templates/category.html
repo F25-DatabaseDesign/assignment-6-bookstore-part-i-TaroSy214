@@ -3,45 +3,51 @@
 {% block container %}
 <main>
     <section id="catLeft">
-        <!-- Create a for loop that will iterate through the list of categories -->
-
-            <!-- Insert an if statement to check if the selectedCategory parameter is the same as the categoryId> -->
-
-                <!-- If so, create a p element displaying the category name
-				     Use class='selectedCategory' to style the category
-                -->
-
-				{% else %}
-                
-				<!-- Otherwise, create a p element containing a link to category HTML, containing the 
-					 corresponding categoryId as a parameter and displaying the category name.
-					 use class='notSelectedCategory' to style the category 
-                -->
-
-
+        <!-- Loop that iterates through the list of categories -->
+        {% for cat in categories %}
+            <!-- Check if the selectedCategory parameter is the same as the categoryId -->
+            {% if selectedCategory == cat[0] %}
+                <!-- If so, create a p element displaying the category name with selectedCategory styling -->
+                <p class="selectedCategory">{{ cat[1] }}</p>
+            {% else %}
+                <!-- Otherwise, create a p element containing a link to category HTML with notSelectedCategory styling -->
+                <p class="notSelectedCategory">
+                    <a href="{{ url_for('category', categoryId=cat[0]) }}">{{ cat[1] }}</a>
+                </p>
+            {% endif %}
+        {% endfor %}
     </section>
+    
     <section id="catRight">
-        <!-- Create a for loop that will iterate through the list of list of books -->
-        
-                <div class='book'>
-                    <!-- Insert the book image stored in the static folder and the book as the alt text -->
-                    <div><img src='book image' alt='book name'/></div>
-                    <div class='bookDetailBox'>
-                        <!-- Insert the corresponding field into each of the following rows -->
-                        <p class='bookTitle'>title of the book</p>
-                        <p class='bookDetail'>by Author name</p>
-                        <p class='bookDetail'>ISBN: number</p>
-                        <p class='bookPrice'>$cost</p>
-                            <a class='actionButton' href='#'>Add to cart</a>
-                        <!-- Insert an if statement such that if the ReadNow flag is set include the Read Now button-->
-                            {% if statement goes in here%}
-                                <a class='actionButton' href='#'>Read Now</a>
-                            {% endif %}
-                    </div>
+        <!-- Loop that iterates through the list of books -->
+        {% for book in books %}
+            <div class='book'>
+                <!-- Book image stored in the static folder -->
+                <div>
+                    <img src="{{ url_for('static', filename='images/books/' + book[6]) }}" 
+                         alt="{{ book[2] }}">
                 </div>
-		<!-- This is where the for loop code ends -->
-
+                
+                <div class='bookDetailBox'>
+                    <!-- Book title -->
+                    <p class='bookTitle'>{{ book[2] }}</p>
+                    <!-- Author name -->
+                    <p class='bookDetail'>by {{ book[3] }}</p>
+                    <!-- ISBN -->
+                    <p class='bookDetail'>ISBN: {{ book[4] }}</p>
+                    <!-- Price formatted to 2 decimal places -->
+                    <p class='bookPrice'>${{ '%.2f'|format(book[5]) }}</p>
+                    
+                    <!-- Add to cart button -->
+                    <a class='actionButton' href='#'>Add to cart</a>
+                    
+                    <!-- If statement to check if ReadNow flag is set -->
+                    {% if book[7] == 1 %}
+                        <a class='actionButton' href='#'>Read Now</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
     </section>
 </main>
 {% endblock %}
-
